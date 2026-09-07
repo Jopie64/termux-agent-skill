@@ -23,7 +23,7 @@ Everything that behaves like standard Linux is deliberately omitted.
 Copy or symlink this folder into your agent's skills directory, e.g. as `~/.agents/skills/termux`:
 
 ```
-ln -s /path/to/termux-skill ~/.agents/skills/termux
+ln -s /path/to/termux-agent-skill ~/.agents/skills/termux
 ```
 
 ## Layout
