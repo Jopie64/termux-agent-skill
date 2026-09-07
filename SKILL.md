@@ -32,11 +32,18 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - UNIX sockets in `$HOME` may fail with `EACCES` on Android — treat socket-based control interfaces as best-effort.
 - RAM and swap are small and swap fills silently — "random crashes" are often OOM kills. Check memory pressure before blaming code.
 
+## OAuth & Credentials
+
+- `.netrc` is whitespace-delimited — passwords with spaces break it (quotes don't help); store secrets in a dedicated 600-mode file instead.
+- Python's `google_auth_oauthlib` ignores a `code_verifier` passed to `authorization_url()`/`fetch_token()` — it belongs on the `Flow` constructor; a fixed verifier makes the auth flow work across separate process invocations.
+- OAuth callbacks to `localhost` work on-device: the phone's own browser can hit a local callback server, so headless-style flows run without a second machine.
+
 ## Debugging Pitfalls
 
 - `pkill -f` / `pgrep -f` patterns match your own `bash -c` command line — bracket a character (`[-]`) or kill by exact pid.
 - `getent`, `nslookup`, and similar core Linux tools are absent; `curl` and `ping` work fine.
 - When a process "is running but not responding", first check for orphaned processes still holding the port before restarting.
+- `rclone config create` can hang indefinitely on Termux — writing `rclone.conf` directly (with a JSON token blob) is equivalent and reliable.
 - A healthy pidfile can point at a dead pid while an orphan holds the resource — trust the port/socket, not the pidfile.
 
 ## Add-ons & App Sources
