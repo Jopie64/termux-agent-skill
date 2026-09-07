@@ -1,0 +1,7 @@
+# This repository is documentation (Markdown) by design.
+# Keep GitHub's language stats honest:
+*.md linguist-detectable=true
+*.md linguist-language=Markdown
+
+# Any helper scripts that may appear later are tooling, not the "language" of this repo:
+*.sh -linguist-detectable
