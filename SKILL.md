@@ -35,7 +35,6 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 ## OAuth & Credentials
 
 - `.netrc` is whitespace-delimited — passwords with spaces break it (quotes don't help); store secrets in a dedicated 600-mode file instead.
-- Python's `google_auth_oauthlib` ignores a `code_verifier` passed to `authorization_url()`/`fetch_token()` — it belongs on the `Flow` constructor; a fixed verifier makes the auth flow work across separate process invocations.
 - OAuth callbacks to `localhost` work on-device: the phone's own browser can hit a local callback server, so headless-style flows run without a second machine.
 
 ## Debugging Pitfalls
