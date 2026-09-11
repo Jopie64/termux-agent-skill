@@ -29,6 +29,7 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - Background processes die with the spawning session unless detached (`setsid` + `nohup`); children receive SIGTERM when a session breaks.
 - Android freezes/kills background apps under memory pressure — use a wake lock for anything long-running.
 - Boot-time autostart requires the Termux:Boot add-on, opened once after install; even then it depends on matching app sources (see below).
+- tmux `attach` starts no new shell — `.bashrc`-based autostart never fires; hook `set-hook -g session-created` / `client-attached` to `run-shell -b '<service> status || <service> start'` instead.
 - UNIX sockets in `$HOME` may fail with `EACCES` on Android — treat socket-based control interfaces as best-effort.
 - RAM and swap are small and swap fills silently — "random crashes" are often OOM kills. Check memory pressure before blaming code.
 
@@ -49,4 +50,5 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 
 - Termux add-ons (API, Boot, Widget) must come from the **same source** as the Termux app (signing keys differ between F-Droid, GitHub, and Play Store) — mixing breaks add-ons.
 - Some add-ons (notably Termux:API) are not on the Play Store at all; F-Droid/GitHub is the complete source.
+- `pm list packages | grep termux` reveals which add-ons are actually installed (separate package ids: `com.termux.boot`, `com.termux.api`, …) — the only reliable check, since a `~/.termux/boot/` script silently does nothing without the add-on.
 - Since 2026, Android developer verification blocks installing unverified APKs on new devices; the escape hatch ("advanced flow" in developer settings) carries a 24-hour wait. Plan sideload-dependent setups accordingly.
