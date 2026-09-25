@@ -15,6 +15,7 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - Shebangs like `#!/usr/bin/env` break — use `$PREFIX/bin/env` or run `termux-fix-shebang` on installed scripts.
 - npm-installed binaries may lack the exec bit and/or carry CRLF shebangs (`env: 'node\r'`) — check both.
 - Shared storage (`~/storage/*`) is FUSE: **no symlinks**, and permissions behave differently from `$HOME`.
+- The `~/storage/*` shortcuts are themselves symlinks (to `/storage/emulated/0/...`): `ls` works but `find` doesn't follow symlink path args — it silently returns 0 results. Use `find -L ~/storage/...` (or the real `/storage/emulated/0` path). Symptom: a find that works on `~/storage/dcim/Camera` returns nothing on `~/storage/dcim`.
 - Other apps' private data is unreachable (Android sandbox), no Bluetooth access. Device features (camera, SMS, GPS, TTS, clipboard, sensors…) only via the `termux-api` CLI + Termux:API add-on app.
 - Android's DUMP permission is not granted — anything reading system state via `dumpsys` returns nothing useful.
 
