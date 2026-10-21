@@ -16,6 +16,7 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - npm-installed binaries may lack the exec bit and/or carry CRLF shebangs (`env: 'node\r'`) — check both.
 - Shared storage (`~/storage/*`) is FUSE: **no symlinks**, and permissions behave differently from `$HOME`.
 - The `~/storage/*` shortcuts are themselves symlinks (to `/storage/emulated/0/...`): `ls` works but `find` doesn't follow symlink path args — it silently returns 0 results. Use `find -L ~/storage/...` (or the real `/storage/emulated/0` path). Symptom: a find that works on `~/storage/dcim/Camera` returns nothing on `~/storage/dcim`.
+- Android 17 blocks hardlinks for app uids (`ln` / `fs.linkSync` → EACCES, even between plain files in `$HOME`; rename works). Not fixable via rish/Shizuku (shell-uid blocked too, SELinux enforcing) and no reflinks on f2fs. Consequence: pnpm silently falls back to copying — store + node_modules double the space. Use npm instead.
 - Other apps' private data is unreachable (Android sandbox), no Bluetooth access. Device features (camera, SMS, GPS, TTS, clipboard, sensors…) only via the `termux-api` CLI + Termux:API add-on app.
 - Android's DUMP permission is not granted — anything reading system state via `dumpsys` returns nothing useful.
 
@@ -24,6 +25,7 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - node-gyp / node-pty builds fail without `python`, `clang`, `make` installed first.
 - `Undefined variable android_ndk_path in binding.gyp` → override `GYP_DEFINES` with a dummy value rather than installing the NDK.
 - After `npm install`, re-check exec bits and shebang endings on bin scripts — updates can undo fixes.
+- npm 11 blocks postinstall scripts by default (`allow-scripts`) — e.g. esbuild, `@parcel/watcher` platform binaries won't be downloaded. Builds may still work via optional platform-binary deps; always verify a build after install.
 
 ## Processes & Lifecycle
 
@@ -38,6 +40,10 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 
 - `.netrc` is whitespace-delimited — passwords with spaces break it (quotes don't help); store secrets in a dedicated 600-mode file instead.
 - OAuth callbacks to `localhost` work on-device: the phone's own browser can hit a local callback server, so headless-style flows run without a second machine.
+
+## Networking
+
+- Android 17 blocks Termux's direct LAN traffic (`ACCESS_LOCAL_NETWORK` appop set to `ignore`; not forceable from the shell). Workaround: loopback tunnel via `rish` (Shizuku shell-uid does have LAN access) + `toybox nc -L`. Traffic through a VPN tun (e.g. Tailscale) does work — the VPN reaches LAN on the device's behalf.
 
 ## Debugging Pitfalls
 
