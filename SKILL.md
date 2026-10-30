@@ -18,6 +18,7 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - The `~/storage/*` shortcuts are themselves symlinks (to `/storage/emulated/0/...`): `ls` works but `find` doesn't follow symlink path args — it silently returns 0 results. Use `find -L ~/storage/...` (or the real `/storage/emulated/0` path). Symptom: a find that works on `~/storage/dcim/Camera` returns nothing on `~/storage/dcim`.
 - Android 17 blocks hardlinks for app uids (`ln` / `fs.linkSync` → EACCES, even between plain files in `$HOME`; rename works). Not fixable via rish/Shizuku (shell-uid blocked too, SELinux enforcing) and no reflinks on f2fs. Consequence: pnpm silently falls back to copying — store + node_modules double the space. Use npm instead.
 - Creating a directory under a **non-existent path inside `/proc`** hangs forever (`fs.mkdirSync('/proc/nonexistent/x', {recursive:true})` never returns). Never use a made-up `/proc/...` path as an "unwritable location" fixture in tests — put a regular file in the way instead.
+- Termux runs with `umask 0077`, so a file-mode assertion that passes here (e.g. a `0644` file looking fine) can fail on CI. Force `umask 0022` when testing permission-sensitive code, and set modes explicitly instead of inheriting them.
 - Other apps' private data is unreachable (Android sandbox), no Bluetooth access. Device features (camera, SMS, GPS, TTS, clipboard, sensors…) only via the `termux-api` CLI + Termux:API add-on app.
 - Android's DUMP permission is not granted — anything reading system state via `dumpsys` returns nothing useful.
 
