@@ -46,7 +46,7 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 
 ## Networking
 
-- Android 17 blocks Termux's direct LAN traffic (`ACCESS_LOCAL_NETWORK` appop set to `ignore`; not forceable from the shell). Workaround: loopback tunnel via `rish` (Shizuku shell-uid does have LAN access) + `toybox nc -L`. Traffic through a VPN tun (e.g. Tailscale) does work — the VPN reaches LAN on the device's behalf.
+- **Android 17 LAN block: no longer the case on Johan's phone since 2026-10-31.** Termux reaches the LAN directly (ping/nc/ssh to 192.168.1.x all fine, Shizuku off); the `ACCESS_LOCAL_NETWORK` appop seems to have taken effect at reboot. Gateway is `192.168.1.254` (`.1` does not exist). Old workaround kept only as fallback: loopback tunnel via `rish` (Shizuku shell-uid) + `toybox nc -L` (`ssh nas-tunnel`). If a LAN connection ever silently times out while ICMP works, re-check this block first — and note a VPN tun (e.g. Tailscale) always worked, since it reaches LAN on the device's behalf.
 
 ## Debugging Pitfalls
 
