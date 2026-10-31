@@ -44,10 +44,6 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - `.netrc` is whitespace-delimited — passwords with spaces break it (quotes don't help); store secrets in a dedicated 600-mode file instead.
 - OAuth callbacks to `localhost` work on-device: the phone's own browser can hit a local callback server, so headless-style flows run without a second machine.
 
-## Networking
-
-- Android's `ACCESS_LOCAL_NETWORK` LAN block can lift after a reboot while the appop still reads as blocked — verify with a direct `ping`/`nc` before assuming a tunnel is needed. If TCP to a LAN host silently times out while ICMP works, suspect that appop again; the loopback tunnel via `rish` (`toybox nc -L`) or a VPN tun always bypasses it.
-
 ## Debugging Pitfalls
 
 - `pkill -f` / `pgrep -f` patterns match your own `bash -c` command line — bracket a character (`[-]`) or kill by exact pid.
@@ -62,3 +58,9 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - Some add-ons (notably Termux:API) are not on the Play Store at all; F-Droid/GitHub is the complete source.
 - `pm list packages | grep termux` reveals which add-ons are actually installed (separate package ids: `com.termux.boot`, `com.termux.api`, …) — the only reliable check, since a `~/.termux/boot/` script silently does nothing without the add-on.
 - Since 2026, Android developer verification blocks installing unverified APKs on new devices; the escape hatch ("advanced flow" in developer settings) carries a 24-hour wait. Plan sideload-dependent setups accordingly.
+
+## References
+
+| File | Load when |
+|------|-----------|
+| `references/local-network.md` | Local network is unreachable but you need it |
