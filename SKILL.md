@@ -38,6 +38,8 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - tmux `attach` starts no new shell — `.bashrc`-based autostart never fires; hook `set-hook -g session-created` / `client-attached` to `run-shell -b '<service> status || <service> start'` instead.
 - UNIX sockets in `$HOME` may fail with `EACCES` on Android — treat socket-based control interfaces as best-effort.
 - RAM and swap are small and swap fills silently — "random crashes" are often OOM kills. Check memory pressure before blaming code.
+- Poll a long job by the pid captured at launch (`kill -0`), never by `pgrep -f`: the pattern also matches the polling shell, so the loop never exits while using no CPU (see Debugging Pitfalls).
+- `cd dir && cmd &` backgrounds the whole chain, so later lines of the same call run in the original cwd — put the `cd` on its own line.
 
 ## OAuth & Credentials
 
