@@ -28,7 +28,7 @@ Non-obvious facts only. If it's in the docs or works like Linux, it's not here.
 - `Undefined variable android_ndk_path in binding.gyp` → override `GYP_DEFINES` with a dummy value rather than installing the NDK.
 - After `npm install`, re-check exec bits and shebang endings on bin scripts — updates can undo fixes.
 - npm 11 blocks postinstall scripts by default (`allow-scripts`) — e.g. esbuild, `@parcel/watcher` platform binaries won't be downloaded. Builds may still work via optional platform-binary deps; always verify a build after install.
-- TypeScript 7 publishes no Android arm64 build, so `tsc`/typecheck fails on-device. Either run it on a Linux host, or install an older compiler over the existing one with `--no-save` (keeps `package.json` and the lockfile upstream-conform) and repeat that after every `npm install`.
+- TypeScript 7 publishes an Android arm64 build (`@typescript/typescript-android-arm64`), but only from `7.1` on — `7.0.x` and the `next` tag have none, so `tsc` fails on-device there. When the repo's range resolves below `7.1`, install `typescript@7.1.0-beta` over it with `--no-save` (keeps `package.json` and the lockfile upstream-conform) and repeat that after every `npm install`.
 
 ## Processes & Lifecycle
 
